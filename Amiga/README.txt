@@ -1,3 +1,5 @@
+# Amiga Reconfigurator
+
 Inspired by posts like these:
 * http://blog.petrockblock.com/forums/topic/launch-amiga-games-from-retropie-menu/
 * https://retropie.org.uk/forum/topic/400/launching-amiga-games-form-emulation-station
