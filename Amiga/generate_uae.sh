@@ -164,11 +164,8 @@ for fullpath in $ROM_FOLDER/*.{adf,adz,zip}; do
     vprint "  Detected [$game] disk $disk_identifier."
   else
     game=$basename
-    vprint "  No matching disk numbers detected using this string:"
-    vprint "  $multidisk_str"
-    vprint "  on this file:"
-    vprint "  $filename"
-    vprint "  It is either a single-disk game or $MULTIDISK_FILE needs to be updated."
+    vprint "  No matching disk numbers detected on the below file - it is single-disk or $MULTIDISK_FILE needs to be updated."
+    vprint "    $filename"
   fi
 
   uae_file=$game.uae
