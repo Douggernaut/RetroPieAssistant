@@ -41,6 +41,7 @@ Usage:
 * edit RetroPieAssistant/Amiga/multidisk.cfg to add your custom regex for disk format strings as wanted/needed (feel free to ask for help on this)
 * edit RetroPieAssistant/Amiga/template.uae as needed (and please tell me how also!)
 * `./RetroPieAssistant/Amiga/generate_uae.sh -h` to make sense of it
+* Make sure your .adf, .adz, or .zip files are contained in the Amiga roms directory (/home/pi/RetroPie/roms/amiga)
 * `./RetroPieAssistant/Amiga/run_all.sh`
 
 Thanks for having a look!
