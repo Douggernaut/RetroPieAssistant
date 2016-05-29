@@ -170,6 +170,19 @@ for fullpath in $ROM_FOLDER/*.{adf,adz,zip}; do
 
   uae_file=$game.uae
 
+  # game files are sorted lexicographically and not in ascending numerical order
+  # i.e. 1 10 11 2 3 4 5 6 7 8 9
+  # i.e. A AA B C D ... Z
+  # also disks may start numbered 0 or 1.
+  # so we have to deal with the cases in which our disks are out of order.
+  if [[ ! $game == $lastgame ]]; then
+    zero="false"
+    alpha="false"
+    count=1
+    qprint ""
+    qprint "$game ..." n
+  fi
+
   # make sure you don't want to lose all that hard work configuring things
   if [[ -f $ROM_FOLDER/$uae_file ]] && [[ ! $force = "true" ]] && [[ ! $game == $lastgame ]]; then
     print "$uae_file already exists. Use -f flag to force overwrites. Skipping $game."
@@ -182,19 +195,6 @@ for fullpath in $ROM_FOLDER/*.{adf,adz,zip}; do
     cp "$TEMPLATE_FILE" "$ROM_FOLDER/$uae_file"
   else
     vprint "Updating $uae_file..."
-  fi
-
-  # game files are sorted lexicographically and not in ascending numerical order
-  # i.e. 1 10 11 2 3 4 5 6 7 8 9
-  # i.e. A AA B C D ... Z
-  # also disks may start numbered 0 or 1.
-  # so we have to deal with the cases in which our disks are out of order.
-  if [[ ! $game == $lastgame ]]; then
-    zero="false"
-    alpha="false"
-    count=1
-    qprint ""
-    qprint "$game ..." n
   fi
 
   case $disk_identifier in
