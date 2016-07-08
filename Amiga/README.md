@@ -24,7 +24,7 @@ Features:
   * Almost literally anything you can think of
   * Because regex is great
 * Can be instructed to unzip .zip files, as long as and .adf or .adz file of the same name as the .zip file is in the .zip top level directory
-* Is "quick": using this ROM set http://www.emuparadise.me/Complete_ROM_Sets_(Full_Sets_in_One_File)_ROMs/Amiga_Fullset/96280 on a Raspberry Pi 3 without overclock:
+* Is "quick": using a large full romset on a Raspberry Pi 3 without overclock:
   * Unzip 4278 .adf floppy disk files and generate .uae files representing 2517 unique games in less than 17 minutes
   * Generate same .uae files from pre-unzipped .adf files in 3.5 minutes
 * "Useful" output, verbose and quiet options available
