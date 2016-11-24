@@ -44,5 +44,6 @@ Usage:
 * `./RetroPieAssistant/Amiga/generate_uae.sh -h` to make sense of it
 * Make sure your .adf, .adz, or .zip files are contained in the Amiga roms directory (/home/pi/RetroPie/roms/amiga)
 * `./RetroPieAssistant/Amiga/run_all.sh`
+* Set UAE4ARM as the default emulator for Amiga (launch a game and press any key as it launches to access the options)
 
 Thanks for having a look!
