@@ -33,7 +33,7 @@ Features:
 
 Bad stuff:
 * Default configuration values (pulled from uae4arm) aren't great, and I don't know enough yet to make intelligent revisions
-* Can't use lctrl+esc to bring up GUI - need to kill processes or reboot system to exit back to EmulationStation
+* Can't use lctrl+esc to bring up GUI - must use F12 instead
 * Probably more
 
 Usage:
