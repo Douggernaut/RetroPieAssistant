@@ -202,7 +202,12 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
     vprint "Creating $uae_file..."
     cp "$TEMPLATE_FILE" "$ROM_FOLDER_CUR/$uae_file"
   else
-    vprint "Updating $uae_file..."
+    if [[ $force = "true" ]]; then
+      vprint "Creating $uae_file..."
+      cp "$TEMPLATE_FILE" "$ROM_FOLDER_CUR/$uae_file"
+    else
+      vprint "Updating $uae_file..."
+    fi
   fi
 
   case $disk_identifier in
