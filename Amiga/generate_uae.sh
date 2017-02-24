@@ -170,7 +170,8 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
 
     index=3
     while [[ -z $disk_identifier ]]; do
-      disk_identifier="${BASH_REMATCH[$index]}" # number of this disk in set 1..n
+      disk_identifier__="${BASH_REMATCH[$index]}" # number of this disk in set 1..n
+      disk_identifier=$((10#$disk_identifier__))
       index=$((index+1))
     done
     vprint "  Detected [$game] disk $disk_identifier."
@@ -235,7 +236,7 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
       zero="true"
       ;;
     "1")
-      if [[ ! $game == $lastgame ]]; then
+      if [[ ! "$game""x" == "$lastgame""x" ]]; then
         init_config "$ROM_FOLDER_CUR/$uae_file"
       else
         count=$((count+1))
