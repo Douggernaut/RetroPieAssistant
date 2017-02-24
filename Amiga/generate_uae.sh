@@ -118,7 +118,7 @@ export ROM_FOLDER_CUR="$fullpath"
 print "searching in:""$ROM_FOLDER_CUR"" ..."
 
 # find all ROMs current rom dir -----
-find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.zip' -type f|while read fullpath;do
+find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.zip' -type f|sort -n|while read fullpath;do
   filename="${fullpath##*/}"  # filename with extension
   basename="${filename%.*}"   # no extension
   extension="${filename##*.}" # just extension
@@ -163,27 +163,40 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
   disk_identifier=""
   vprint "Running name detection on $filename"
   if [[ $basename =~ (.*)($multidisk_str) ]]; then
-    game="${BASH_REMATCH[1]}"
+    game=${BASH_REMATCH[1]} # does not include stuff after the disk numbers
+    game2=$(echo "$basename"|sed -e 's#'"${BASH_REMATCH[2]}"'##')
+    vprint "game =""$game"
+    vprint "game2=""$game2"
+
     index=3
     while [[ -z $disk_identifier ]]; do
-      disk_identifier="${BASH_REMATCH[$index]}"
+      disk_identifier="${BASH_REMATCH[$index]}" # number of this disk in set 1..n
       index=$((index+1))
     done
     vprint "  Detected [$game] disk $disk_identifier."
   else
-    game=$basename
+    game="$basename"
+    game2="$game"
     vprint "  No matching disk numbers detected on the below file - it is single-disk or $MULTIDISK_FILE needs to be updated."
     vprint "    $filename"
   fi
 
-  uae_file=$game.uae
+  # use $game2 instead of $game
+  game="$game2"
+
+  uae_file="$game".uae
 
   # game files are sorted lexicographically and not in ascending numerical order
   # i.e. 1 10 11 2 3 4 5 6 7 8 9
   # i.e. A AA B C D ... Z
   # also disks may start numbered 0 or 1.
   # so we have to deal with the cases in which our disks are out of order.
-  if [[ ! $game == $lastgame ]]; then
+
+  vprint "game    =""$game"
+  vprint "lastgame=""$lastgame"
+
+  if [[ ! "$game""x" == "$lastgame""x" ]]; then
+    vprint "reset game"
     zero="false"
     alpha="false"
     count=1
@@ -192,13 +205,13 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
   fi
 
   # make sure you don't want to lose all that hard work configuring things
-  if [[ -f $ROM_FOLDER_CUR/$uae_file ]] && [[ ! $force = "true" ]] && [[ ! $game == $lastgame ]]; then
+  if [[ -f "$ROM_FOLDER_CUR/$uae_file" ]] && [[ ! $force = "true" ]] && [[ ! "$game""x" == "$lastgame""x" ]]; then
     print "$uae_file already exists. Use -f flag to force overwrites. Skipping $game."
     continue
   fi
 
   # create .uae file if it doesn't exist
-  if [[ ! -f $ROM_FOLDER_CUR/$uae_file ]]; then
+  if [[ ! -f "$ROM_FOLDER_CUR/$uae_file" ]]; then
     vprint "Creating $uae_file..."
     cp "$TEMPLATE_FILE" "$ROM_FOLDER_CUR/$uae_file"
   else
@@ -209,6 +222,8 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
       vprint "Updating $uae_file..."
     fi
   fi
+
+  vprint disk_identifier=$disk_identifier
 
   case $disk_identifier in
     "A")
@@ -231,7 +246,9 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
       init_config "$ROM_FOLDER_CUR/$uae_file"
       ;;
     *)
+      vprint countA=$count
       count=$((count+1))
+      vprint countB=$count
       ;;
   esac
 
@@ -243,6 +260,7 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
   elif [[ $alpha = "false" ]]; then
     vprint "Updating drive floppy$((disk_identifier-1)) to point to $fullpath.."
     sed -i '/floppy'"$((disk_identifier-1))"'=/{s/=.*/='"$escaped_fullpath"'/}' "$ROM_FOLDER_CUR/$uae_file"
+    # sed -i -e 's#^floppy'"$disk_identifier"'=.*$#floppy'"$disk_identifier"'=xxxaaaaa#' "$ROM_FOLDER_CUR"/"$uae_file"
   else
     case $disk_identifier in
       "A") drive_number=0 ;;
@@ -262,7 +280,7 @@ find "$ROM_FOLDER_CUR"  -maxdepth 1 -name '*.adf' -o -name '*.adz' -o -name '*.z
   vprint
 
   # update last game for counting purposes
-  lastgame=$game
+  lastgame="$game"
   qprint " $disk_identifier" n
 
 
